@@ -1,0 +1,5 @@
+11/3/2015 Hexc, Ping
+
+This directory contains the macros for analysing the ntuple produced from
+the agel_sim simulation.  One needs to link Agel_sim.root to the produced 
+output. Plots produced from the macros are stored in the figs directory.

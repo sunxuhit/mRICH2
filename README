@@ -1,0 +1,4 @@
+Feb 2, 2017, hexc & Ping
+We started updating the mRICH standalone Geant4 simulation for the second mRICH detector design. The detector design is very similar to the first prototype. We also changed the file names to be meaningful.
+Nov, 2020, hexc
+The code has been updated for running this simulation in multithreaded mode.
