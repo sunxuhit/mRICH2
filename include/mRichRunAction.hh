@@ -23,11 +23,10 @@ public:
 public:
   void BeginOfRunAction(const G4Run* aRun);
   void EndOfRunAction(const G4Run* aRun);
-  //G4int GetNtColID(G4int id) { return fNtColID[id];};
   
 private:
   G4Timer* timer;
-  //G4int fNtColID[30];  // The length of the array should be increased if more variables are added.
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

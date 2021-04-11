@@ -26,7 +26,7 @@ G4double LENSHalfXYZ[3];
 G4double LENS_z;
 G4double LENSFocalLength;
 
-G4double lens_z;
+G4double lens_z;   // poor variable name choice, given the defined LENS_z
 G4double lens_halfz;
 G4double GrooveWidth;
 
@@ -282,7 +282,7 @@ void SetMirrorPar(PolyhedraParameters* par)
   par->num_zLayer=2;
   
   //par->z[0]=LENS_z+LENSHalfXYZ[2]+lens_gap;   //back of lens+air gap
-  par->z[0]=glassWindow_z-glassWindow_halfXYZ[2]-LENSFocalLength;
+  par->z[0]=glassWindow_z-glassWindow_halfXYZ[2]-LENSFocalLength + lens_gap;  
   par->z[1]=glassWindow_z-glassWindow_halfXYZ[2];   //front of sensor plane
   G4cout<<"mirror length_="<<par->z[1]-par->z[0]<<endl;                                                                                                                                                                                
   /*

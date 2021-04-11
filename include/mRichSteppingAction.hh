@@ -17,22 +17,22 @@ class mRichAnalysisManager;
 
 class mRichSteppingAction : public G4UserSteppingAction 
 {
-  G4int iev;
+  G4int evtID;
   
 public:
   
   mRichSteppingAction(mRichPrimaryGeneratorAction *gen_action_in, mRichRunAction *run_action_in);
   virtual ~mRichSteppingAction();
   void UserSteppingAction(const G4Step* aStep);
-  mRichAnalysisManager* getRAnalysisManager()
-  {return  ranalysisManager; }
+  //  mRichAnalysisManager* getRAnalysisManager()
+  //  {return  ranalysisManager; }
   G4double getHpdPhElectronKE() 
   {return HpdPhElectronKE; }
   
 private:
   std::fstream fOut;
   
-  mRichAnalysisManager* ranalysisManager;
+  //  mRichAnalysisManager* ranalysisManager;
   mRichPrimaryGeneratorAction* rPrimGenAction;
   G4double HpdPhElectronKE;
   G4VParticleChange* uParticleChange;

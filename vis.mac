@@ -1,7 +1,3 @@
-# $Id: vis.mac,v 1.1.1.1 2017/02/02 15:46:36 hexc Exp $
-#
-# Macro file for the initialization phase of "exampleN03.cc"
-# when running in interactive mode
 #
 # Sets some default verbose
 #
@@ -42,6 +38,7 @@
 #/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
 /vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
 # (if too many tracks cause core dump => /tracking/storeTrajectory 0)
+/tracking/storeTrajectory 0
 #
 # To draw gammas only
 #/vis/filtering/trajectories/create/particleFilter
@@ -57,11 +54,3 @@
 #
 /vis/scene/endOfEventAction accumulate
 #
-# At end of each run, an automatic flush causes graphical output.
-#/run/beamOn 1
-# When you exit Geant4, you will find a file called scene-0.heprep.zip.
-# Unzipping this will give you three separate HepRep files suitable for
-# viewing in WIRED.
-# The first file will contain just detector geometry.
-# The second file will contain the detector plus one event.
-# The third file will contain the detector plus ten events.

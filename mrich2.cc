@@ -1,15 +1,19 @@
 // This code is used for EIC detector R&D project
 
 // Date created:  8/6/2014, hexc
-// Date updated: 12/4/2014, hexc, Liang, Ping
+// Updated: 12/4/2014, hexc, Liang, Ping
 //               10/22/2015, hexc and Ping
 //                  Adding a variable length for the aerogel block
-// Date updated: 2/2/2017, hexc, Ping
+// Updated: 2/2/2017, hexc, Ping
 //    Updated the code for the 2nd mRICH prototype
 //
-// Date updated: 11/10/2020, hexc
+// Updated: 11/10/2020, hexc
 //    Updating the code for new GEANT4 release G4.10.6 and for running in
 //    multithreaded mode.
+//
+// Updated: 1/4/2021, hexc
+//    Removed unnecessary headers
+//    Reorganized the physics processes.
 //
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -23,26 +27,19 @@
 #else
 #include "G4RunManager.hh"
 #endif
+
+#include "G4OpticalPhysics.hh"
+//#include "QGSP_BERT_HP.hh"
+#include "FTFP_BERT.hh"
+#include "G4VisExecutive.hh"
+#include "G4UIExecutive.hh"
 #include "G4UImanager.hh"
 #include "Randomize.hh"
 
 #include "mRichDetectorConstruction.hh"
-// Commented out by HEXC, Nov 20, 2013
-//#include "mRichPhysicsList.hh"
-#include "FTFP_BERT.hh"
-#include "G4PhysListFactory.hh"
-#include "G4OpticalPhysics.hh"
-//#include "QGSP_BERT.hh"
 #include "mRichPrimaryGeneratorAction.hh"
 #include "mRichRunAction.hh"
-//#include "mRichEventAction.hh"
-#include "mRichSteppingAction.hh"
-#include "mRichSteppingVerbose.hh"
-#include "mRichStackingAction.hh"
-#include "mRichAgelTrackingAction.hh"
 #include "mRichActionInitialization.hh"
-#include "G4VisExecutive.hh"
-#include "G4UIExecutive.hh"
 
 namespace {
     void PrintUsage() {
@@ -64,9 +61,9 @@ int main(int argc, char** argv)
     return 1;
   }
   
-  
   G4String macro;
   G4String session;
+  
 #ifdef G4MULTITHREADED
   G4int nThreads = 3;
 #endif
@@ -115,6 +112,7 @@ int main(int argc, char** argv)
   // Setting up physics process list
   //
   // Activate necessary physics process, including optical physics processes
+  /*
   G4PhysListFactory factory;
   G4VModularPhysicsList* phys = NULL;
   G4String physName = "";
@@ -131,12 +129,20 @@ int main(int argc, char** argv)
     phys = factory.GetReferencePhysList(physName);
   }
   
+  */
+
+  //
+  // Set proper physics processes
+  // 
+  //  G4VModularPhysicsList* physicsList = new QGSP_BERT_HP;    // added on 4/12/2019
+  G4VModularPhysicsList* physicsList = new FTFP_BERT;                // changed on 1/5/2021  
+
   //
   // Now add and configure optical physics
   //
   G4OpticalPhysics* opticalPhysics = new G4OpticalPhysics();
   opticalPhysics->Configure(kCerenkov, true);
-  opticalPhysics->Configure(kScintillation, true);  
+  //  opticalPhysics->Configure(kScintillation, true);    // turn off scintillation process on Jan 3, 2021 hexc  
   opticalPhysics->Configure(kAbsorption, true);
   opticalPhysics->Configure(kRayleigh, true);
   opticalPhysics->Configure(kMieHG, true); 
@@ -145,20 +151,24 @@ int main(int argc, char** argv)
 
   //opticalPhysics->SetCerenkovStackPhotons(false);
 
+  /*
   // Set control parameters for scintillation
   // Followed from: 
   // https://indico.cern.ch/event/789510/contributions/3279418/attachments/1818134/2972494/AH_OpticalPhotons_slides.pdf
   opticalPhysics->SetScintillationYieldFactor(1.0);
   opticalPhysics->SetScintillationExcitationRatio(0.0);
 
+  */
+  
   // changed from 100 (fiberPanel) to 20 (mRICH)
   opticalPhysics->SetMaxNumPhotonsPerStep(20);
   opticalPhysics->SetMaxBetaChangePerStep(10.0);
   
-  phys->RegisterPhysics(opticalPhysics);
-  phys->DumpList();
+  physicsList->RegisterPhysics(opticalPhysics);
+  physicsList->DumpList();
   
-  runManager->SetUserInitialization(phys);
+  //  runManager->SetUserInitialization(phys);
+  runManager->SetUserInitialization(physicsList);
 
   // Set user action initialization
   //

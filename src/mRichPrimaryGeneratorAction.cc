@@ -6,6 +6,10 @@
 //       particleGun->SetParticlePosition(G4ThreeVector(0.0*cm, 0.0*cm ,-11.0*cm));
 //    to
 //       particleGun->SetParticlePosition(G4ThreeVector(0.0*cm, 0.0*cm ,-13.0*cm));
+//
+// 1/3/2021 hexc
+//    The default particle generator type is set to 0. One has to set the partile type and energy to be launched.
+//
 
 #include "mRichPrimaryGeneratorAction.hh"
 #include "mRichPrimaryGeneratorMessenger.hh"
@@ -146,7 +150,7 @@ void mRichPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
     //    particleGun->SetParticleMomentumDirection(G4ThreeVector(0,0,1.0));
     //    particleGun->SetParticleMomentumDirection(G4ThreeVector(0, 0.1737, 0.9848));
     particleGun->SetParticleMomentumDirection(G4ThreeVector(0, 0, 1));
-    Ekin = 3.2*eV;   // ~400 nm
+    Ekin = 3.0*eV;   // ~400 nm
     particleGun->SetParticleEnergy(Ekin);
     
     for (G4int i=1; i<nbins; i++) {
@@ -211,6 +215,8 @@ void mRichPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   }//end of ev_type 5
   
 
+  /* 
+
   // find and set the primary particle position and momentum 
   G4int primID = particleGun->GetParticleDefinition()->GetPDGEncoding();
   G4double primP_mass = particleGun->GetParticleDefinition()->GetPDGMass();
@@ -249,5 +255,7 @@ void mRichPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   analysisManager->FillNtupleDColumn(itree, 8, evtID);
 
   analysisManager->AddNtupleRow(itree);
+
+  */
   
 }

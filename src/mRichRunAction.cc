@@ -5,12 +5,14 @@
 #include "mRichRunAction.hh"
 
 #include "G4Run.hh"
+#include "G4RunManager.hh"
 #include "g4root.hh"
 
 using namespace std;
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 mRichRunAction::mRichRunAction()
+  : G4UserRunAction()
 {
   timer = new G4Timer;
 }
@@ -38,6 +40,7 @@ void mRichRunAction::BeginOfRunAction(const G4Run* aRun)
 
   G4cout << "### Run " << aRun->GetRunID() << " start." << G4endl; 
   timer->Start();
+  
   // Book histograms, ntuple
   
   // Create analysis manager

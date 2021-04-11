@@ -54,7 +54,7 @@ extern G4double GrooveWidth;
 const G4double LensEffDiameter=15.24*cm;
 //const G4double halfThickness=0.102*cm;
 
-extern G4double lens_z;
+extern G4double lens_z; 
 const G4double lens_gap=25.4/8.0*mm;    //1/8 inch
 extern G4double lens_holdbox_posz;
 //--------------------------Plano lens parameters----------------------------//

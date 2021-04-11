@@ -51,26 +51,29 @@ G4VPhysicalVolume* mRichDetectorConstruction::Construct() {
   SetMaterial();                  //defined material in mRICHMaterial.cc
   SetParameters(LENS);     //don't change the order of these lines
   
-  //===================================================================//
-  //                             GEOMETRY                              //
-  //===================================================================//
+  //============================//
+  //                             GEOMETRY                               //
+  //============================//
   build_expHall();    //must build expHall and holder box first   
   build_holderBox();
-  //build_foamHolder();
-  //build_aerogel();    // one can comment out this function call for not including the aerogel block in the detector constr.
+  
+  build_foamHolder();
+  build_aerogel();    // one can comment out this function call for not including the aerogel block in the detector constr.
+
   
   G4Material *LensMaterial = G4Material::GetMaterial("Acrylic") ;
   G4ThreeVector LensPosition = G4ThreeVector(0.0*mm,0.0*mm,lens_z);
   if (LENS) new UltraFresnelLens(LensMaterial,hollowVolume->GetPhysicalVolume()) ;
   else build_planoLens();
-
+  
+  
   build_SensorPlane();
   build_mirror();        // Enable mirror set
-  //build_readout();
+  build_readout();
   
-  //===================================================================//
-  //                             SURFACES                              //
-  //===================================================================//
+  //===========================//
+  //                             SURFACES                             //
+  //===========================//
   //-------------------------- Air plane ------------------------------//
   //copy it to material file later
   G4OpticalSurface* OpAirSurface = new G4OpticalSurface("AirSurface");
@@ -105,7 +108,7 @@ BOX::BOX(BoxParameters boxPar, G4LogicalVolume* motherLV)
   box = new G4Box(boxPar.name,boxPar.halfXYZ[0],boxPar.halfXYZ[1],boxPar.halfXYZ[2]);
   log = new G4LogicalVolume(box,boxPar.material,boxPar.name,0,0,0);
   phys= new G4PVPlacement(0,boxPar.posXYZ,log,boxPar.name,
-				  motherLV,false,0);
+			  motherLV,false,0,true);    // added for checking overlaps
 
  G4VisAttributes* visAtt = new G4VisAttributes(boxPar.color);
  visAtt->SetVisibility(boxPar.visibility);
@@ -203,7 +206,7 @@ void mRichDetectorConstruction::build_aerogel()
 //---------------------------------------------------------------------------------//
 void mRichDetectorConstruction::build_SensorPlane()
 {
-  G4double last_x=glassWindow_halfXYZ[0] + sensorGap; // adding extra space between H12700's
+  G4double last_x=glassWindow_halfXYZ[0] + sensorGap; // adding extra space between H13700's
   G4double last_y=last_x;
 
   BoxParameters tmp_par;

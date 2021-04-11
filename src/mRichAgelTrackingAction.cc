@@ -37,7 +37,7 @@ void mRichAgelTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     
     G4String particleName = particle->GetParticleName();
     G4ThreeVector position = aTrack->GetPosition();
-
+    
     // find and set event ID
     G4int evtID = gen_action->getEvtID();
     
@@ -46,19 +46,19 @@ void mRichAgelTrackingAction::PreUserTrackingAction(const G4Track* aTrack)
     
     // fill ntuple (ntuple ID = 1)
     /*
-    analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(0), PID);
-    analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(1),KE/MeV);
-    analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(2),position.getX());
-    analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(3),position.getY());
-    analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(4),position.getZ());
-    analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(5),P.getX()/MeV);
-    analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(6),P.getY()/MeV);
-    analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(7),P.getZ()/MeV);
-    analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(8),Global_time/ms);
-    analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(9),Local_time/ms);
-    analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(10),Proper_time/ms);
-    analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(11),evtID);
-    analysisManager->AddNtupleRow(1);
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(0), PID);
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(1),KE/MeV);
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(2),position.getX());
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(3),position.getY());
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(4),position.getZ());
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(5),P.getX()/MeV);
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(6),P.getY()/MeV);
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(7),P.getZ()/MeV);
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(8),Global_time/ms);
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(9),Local_time/ms);
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(10),Proper_time/ms);
+      analysisManager->FillNtupleDColumn(1, run_action->GetNtColID(11),evtID);
+      analysisManager->AddNtupleRow(1);
     */
   }
 }
