@@ -9,7 +9,8 @@
 //
 // 1/3/2021 hexc
 //    The default particle generator type is set to 0. One has to set the partile type and energy to be launched.
-//
+// 4/11/2021 hexc
+//    Fixed a problem of assigning ntuple ID.
 
 #include "mRichPrimaryGeneratorAction.hh"
 #include "mRichPrimaryGeneratorMessenger.hh"
@@ -213,9 +214,6 @@ void mRichPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
       particleGun->GeneratePrimaryVertex(anEvent);
     } //end of i loop
   }//end of ev_type 5
-  
-
-  /* 
 
   // find and set the primary particle position and momentum 
   G4int primID = particleGun->GetParticleDefinition()->GetPDGEncoding();
@@ -233,7 +231,6 @@ void mRichPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   G4double pyP = primP_mom.getY();
   G4double pzP = primP_mom.getZ();
 
-
   // find and set event ID
   evtID = anEvent->GetEventID();
 
@@ -243,19 +240,17 @@ void mRichPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
   G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
   
   // fill ntuple (ntuple ID = 3)
-  int itree=3;
-  analysisManager->FillNtupleDColumn(itree, 0, primID);
-  analysisManager->FillNtupleDColumn(itree, 1, eP/MeV);
-  analysisManager->FillNtupleDColumn(itree, 2, xP/cm);
-  analysisManager->FillNtupleDColumn(itree, 3, yP/cm);
-  analysisManager->FillNtupleDColumn(itree, 4, zP/cm);
-  analysisManager->FillNtupleDColumn(itree, 5, pxP/MeV);
-  analysisManager->FillNtupleDColumn(itree, 6, pyP/MeV);
-  analysisManager->FillNtupleDColumn(itree, 7, pzP/MeV);
-  analysisManager->FillNtupleDColumn(itree, 8, evtID);
+  int itree=3, startID = 21;  
+  analysisManager->FillNtupleDColumn(itree, run_action->GetNtColID(startID++), primID);
+  analysisManager->FillNtupleDColumn(itree, run_action->GetNtColID(startID++), eP/MeV);
+  analysisManager->FillNtupleDColumn(itree, run_action->GetNtColID(startID++), xP/cm);
+  analysisManager->FillNtupleDColumn(itree, run_action->GetNtColID(startID++), yP/cm);
+  analysisManager->FillNtupleDColumn(itree, run_action->GetNtColID(startID++), zP/cm);
+  analysisManager->FillNtupleDColumn(itree, run_action->GetNtColID(startID++), pxP/MeV);
+  analysisManager->FillNtupleDColumn(itree, run_action->GetNtColID(startID++), pyP/MeV);
+  analysisManager->FillNtupleDColumn(itree, run_action->GetNtColID(startID++), pzP/MeV);
+  analysisManager->FillNtupleDColumn(itree, run_action->GetNtColID(startID++), evtID);
 
   analysisManager->AddNtupleRow(itree);
-
-  */
   
 }

@@ -28,9 +28,10 @@
 #include "G4RunManager.hh"
 #endif
 
+#include "G4PhysListFactory.hh"
 #include "G4OpticalPhysics.hh"
-//#include "QGSP_BERT_HP.hh"
-#include "FTFP_BERT.hh"
+#include "QGSP_BERT.hh"
+//#include "FTFP_BERT.hh"
 #include "G4VisExecutive.hh"
 #include "G4UIExecutive.hh"
 #include "G4UImanager.hh"
@@ -112,16 +113,16 @@ int main(int argc, char** argv)
   // Setting up physics process list
   //
   // Activate necessary physics process, including optical physics processes
-  /*
+  
   G4PhysListFactory factory;
   G4VModularPhysicsList* phys = NULL;
   G4String physName = "";
   char* path = getenv("PHYSLIST");
   if (path) {
-      physName = G4String(path);
+    physName = G4String(path);
   } else {
-    //      physName = "FTFP_BERT";  // default
-      physName = "QGSP_BERT";  // default
+    //  physName = "FTFP_BERT"; 
+    physName = "QGSP_BERT";  // default
   }
   
   // reference PhysicsList via its name
@@ -129,13 +130,11 @@ int main(int argc, char** argv)
     phys = factory.GetReferencePhysList(physName);
   }
   
-  */
-
   //
   // Set proper physics processes
   // 
-  //  G4VModularPhysicsList* physicsList = new QGSP_BERT_HP;    // added on 4/12/2019
-  G4VModularPhysicsList* physicsList = new FTFP_BERT;                // changed on 1/5/2021  
+  //G4VModularPhysicsList* physicsList = new QGSP_BERT;        // added on 4/11/2021
+  //G4VModularPhysicsList* physicsList = new FTFP_BERT;      // changed on 1/5/2021  
 
   //
   // Now add and configure optical physics
@@ -151,7 +150,7 @@ int main(int argc, char** argv)
 
   //opticalPhysics->SetCerenkovStackPhotons(false);
 
-  /*
+  /*    4/11/2021
   // Set control parameters for scintillation
   // Followed from: 
   // https://indico.cern.ch/event/789510/contributions/3279418/attachments/1818134/2972494/AH_OpticalPhotons_slides.pdf
@@ -164,11 +163,11 @@ int main(int argc, char** argv)
   opticalPhysics->SetMaxNumPhotonsPerStep(20);
   opticalPhysics->SetMaxBetaChangePerStep(10.0);
   
-  physicsList->RegisterPhysics(opticalPhysics);
-  physicsList->DumpList();
+  phys->RegisterPhysics(opticalPhysics);
+  phys->DumpList();
   
   //  runManager->SetUserInitialization(phys);
-  runManager->SetUserInitialization(physicsList);
+  runManager->SetUserInitialization(phys);
 
   // Set user action initialization
   //

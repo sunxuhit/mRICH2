@@ -4,6 +4,9 @@
 //    One needs to set LENS either to 0 or 1 for choosing plano lens or Fresnel lens,
 //    respectively. Default is set to 1.
 //
+// Updated on 4/11/2021: hexc
+//    Clean up the code and add proper comments
+//
 #include "mRichDetectorConstruction.hh"
 #include "mRichMaterial.h"
 #include "mRichParameters.h"
@@ -46,24 +49,24 @@ mRichDetectorConstruction::~mRichDetectorConstruction(){;}
 //---------------------------------------------------------------------------------//
 G4VPhysicalVolume* mRichDetectorConstruction::Construct() {
 
-  int LENS=1;                     //1=Fresnel lens, 0=Plano lens
+  int LENS=1;              //1=Fresnel lens, 0=Plano lens
 
-  SetMaterial();                  //defined material in mRICHMaterial.cc
+  SetMaterial();           //defined material in mRICHMaterial.cc
   SetParameters(LENS);     //don't change the order of these lines
   
   //============================//
-  //                             GEOMETRY                               //
+  //  GEOMETRY                  //
   //============================//
-  build_expHall();    //must build expHall and holder box first   
+  build_expHall();    // must build expHall and holder box first   
   build_holderBox();
   
   build_foamHolder();
-  build_aerogel();    // one can comment out this function call for not including the aerogel block in the detector constr.
-
+  build_aerogel();    // one can comment out this function call for not including the
+                      //    aerogel block in the detector constr.
   
-  G4Material *LensMaterial = G4Material::GetMaterial("Acrylic") ;
+  G4Material *LensMaterial = G4Material::GetMaterial("Acrylic");
   G4ThreeVector LensPosition = G4ThreeVector(0.0*mm,0.0*mm,lens_z);
-  if (LENS) new UltraFresnelLens(LensMaterial,hollowVolume->GetPhysicalVolume()) ;
+  if (LENS) new UltraFresnelLens(LensMaterial,hollowVolume->GetPhysicalVolume());
   else build_planoLens();
   
   
@@ -72,7 +75,7 @@ G4VPhysicalVolume* mRichDetectorConstruction::Construct() {
   build_readout();
   
   //===========================//
-  //                             SURFACES                             //
+  //  SURFACES                 //
   //===========================//
   //-------------------------- Air plane ------------------------------//
   //copy it to material file later
@@ -107,7 +110,7 @@ BOX::BOX(BoxParameters boxPar, G4LogicalVolume* motherLV)
 {
   box = new G4Box(boxPar.name,boxPar.halfXYZ[0],boxPar.halfXYZ[1],boxPar.halfXYZ[2]);
   log = new G4LogicalVolume(box,boxPar.material,boxPar.name,0,0,0);
-  phys= new G4PVPlacement(0,boxPar.posXYZ,log,boxPar.name,
+  phys = new G4PVPlacement(0,boxPar.posXYZ,log,boxPar.name,
 			  motherLV,false,0,true);    // added for checking overlaps
 
  G4VisAttributes* visAtt = new G4VisAttributes(boxPar.color);
@@ -142,7 +145,7 @@ void mRichDetectorConstruction::build_expHall()
 {
   BoxParameters expHallPar;
   SetExpHallPar(&expHallPar);
-  expHall=new BOX(expHallPar, 0);
+  expHall = new BOX(expHallPar, 0);
 }
 
 //---------------------------------------------------------------------------------//
@@ -150,12 +153,12 @@ void mRichDetectorConstruction::build_holderBox()
 {
   BoxParameters holderBoxPar;
   SetHolderBoxPar(&holderBoxPar);
-  holderBox=new BOX(holderBoxPar,expHall->GetLogicalVolume());
+  holderBox = new BOX(holderBoxPar,expHall->GetLogicalVolume());
 
   //hollow volume of holder box
   BoxParameters hollowVolumePar;
   SetHollowVolumePar(&hollowVolumePar);
-  hollowVolume=new BOX(hollowVolumePar, holderBox->GetLogicalVolume());
+  hollowVolume = new BOX(hollowVolumePar, holderBox->GetLogicalVolume());
 }
 
 //---------------------------------------------------------------------------------//
@@ -163,11 +166,11 @@ void mRichDetectorConstruction::build_foamHolder()
 { 
   PolyhedraParameters polyPar;
   SetFoamHolderPar(&polyPar);
-  POLYHEDRA* foamHolderPoly=new POLYHEDRA(polyPar,hollowVolume->GetLogicalVolume());
+  POLYHEDRA* foamHolderPoly = new POLYHEDRA(polyPar, hollowVolume->GetLogicalVolume());
  
   BoxParameters boxPar;                                                   
   SetFoamHolderPar(&boxPar);
-  BOX* foamHolderBox=new BOX(boxPar,hollowVolume->GetLogicalVolume());
+  BOX* foamHolderBox = new BOX(boxPar, hollowVolume->GetLogicalVolume());
 }
 
 //---------------------------------------------------------------------------------//
@@ -175,7 +178,7 @@ void mRichDetectorConstruction::build_aerogel()
 {
   BoxParameters aerogelPar;
   SetAerogelPar(&aerogelPar);
-  aerogel=new BOX(aerogelPar, hollowVolume->GetLogicalVolume());
+  aerogel = new BOX(aerogelPar, hollowVolume->GetLogicalVolume());
 
   G4OpticalSurface* OpWaterSurface = new G4OpticalSurface("WaterSurface");
   OpWaterSurface->SetType(dielectric_dielectric);
@@ -206,8 +209,8 @@ void mRichDetectorConstruction::build_aerogel()
 //---------------------------------------------------------------------------------//
 void mRichDetectorConstruction::build_SensorPlane()
 {
-  G4double last_x=glassWindow_halfXYZ[0] + sensorGap; // adding extra space between H13700's
-  G4double last_y=last_x;
+  G4double last_x = glassWindow_halfXYZ[0] + sensorGap; // adding extra space between H13700's
+  G4double last_y = last_x;
 
   BoxParameters tmp_par;
 
@@ -217,22 +220,22 @@ void mRichDetectorConstruction::build_SensorPlane()
   int i;
   for (i=0;i<4;i++) {
     if (i==0) {
-      phodet_x=last_x;
-      phodet_y=last_y;
+      phodet_x = last_x;
+      phodet_y = last_y;
     }
     else {
-      phodet_x=-last_y;
-      phodet_y=last_x;
+      phodet_x = -last_y;
+      phodet_y = last_x;
     }
 
-    SetGlassWindowPar(&tmp_par, i+1, G4ThreeVector(phodet_x,phodet_y,glassWindow_z));
-    glassWindow[i]=new BOX(tmp_par,hollowVolume->GetLogicalVolume());
+    SetGlassWindowPar(&tmp_par, i+1, G4ThreeVector(phodet_x, phodet_y, glassWindow_z));
+    glassWindow[i] = new BOX(tmp_par, hollowVolume->GetLogicalVolume());
 
-    SetSensorPar(&tmp_par, i+1, G4ThreeVector(phodet_x,phodet_y,phodet_z));
-    phoDet[i]=new BOX(tmp_par,hollowVolume->GetLogicalVolume());
+    SetSensorPar(&tmp_par, i+1, G4ThreeVector(phodet_x, phodet_y, phodet_z));
+    phoDet[i] = new BOX(tmp_par, hollowVolume->GetLogicalVolume());
 
-    last_x=phodet_x;
-    last_y=phodet_y;
+    last_x = phodet_x;
+    last_y = phodet_y;
   }//end of for(i)     
 }
 //---------------------------------------------------------------------------------//
@@ -240,14 +243,14 @@ void mRichDetectorConstruction::build_readout()
 {
   PolyhedraParameters readoutPar;
   SetReadoutPar(&readoutPar);
-  POLYHEDRA* readout=new POLYHEDRA(readoutPar,hollowVolume->GetLogicalVolume());
+  POLYHEDRA* readout = new POLYHEDRA(readoutPar, hollowVolume->GetLogicalVolume());
 }
 //---------------------------------------------------------------------------------//
 void mRichDetectorConstruction::build_mirror()
 {
   PolyhedraParameters mirrorPar;
   SetMirrorPar(&mirrorPar);
-  POLYHEDRA* mirror=new POLYHEDRA(mirrorPar,hollowVolume->GetLogicalVolume());
+  POLYHEDRA* mirror = new POLYHEDRA(mirrorPar, hollowVolume->GetLogicalVolume());
 
   //-----------
   //   Optical properties of the interface between the Air and Reflective Surface 
@@ -277,12 +280,12 @@ void mRichDetectorConstruction::build_mirror()
 void mRichDetectorConstruction::build_planoLens()
 {
   G4VSolid* box = new G4Box("box",planoLens_R,planoLens_R,planoLens_R);
-  G4VSolid* tub=new G4Tubs("tub",0,planoLens_D/2.0,planoLens_ET/2.0,0,twopi);
+  G4VSolid* tub = new G4Tubs("tub",0,planoLens_D/2.0,planoLens_ET/2.0,0,twopi);
 
   G4VSolid* solidSphere=new G4Orb("solidSphere",planoLens_R);
-  G4SubtractionSolid* tmp1=new G4SubtractionSolid("tmp1",solidSphere,box,
+  G4SubtractionSolid* tmp1 = new G4SubtractionSolid("tmp1",solidSphere,box,
 						  0,G4ThreeVector(0,0,planoLens_CT-planoLens_ET));
-  G4UnionSolid* planoLens=new G4UnionSolid("planoLens", tmp1, tub,
+  G4UnionSolid* planoLens = new G4UnionSolid("planoLens", tmp1, tub,
   					   0,G4ThreeVector(0,0,-planoLens_R+planoLens_CT-planoLens_ET/2.0));
 
   //G4LogicalVolume* log1 = new G4LogicalVolume(solidSphere,Air_Opt,"sphere",0,0,0);

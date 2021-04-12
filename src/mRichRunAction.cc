@@ -60,13 +60,14 @@ void mRichRunAction::BeginOfRunAction(const G4Run* aRun)
   
   // Open an output file
   
-  G4String fileName = "Agel_output";
+  G4String fileName = "mRICH_output";
   analysisManager->OpenFile(fileName);
   analysisManager->SetFirstNtupleId(1);
-
+  
+  G4int indexID = 0;
   for (i=0;i<3;i++) {
     analysisManager->CreateNtuple(treeName[i].c_str(), description[i].c_str());
-    for (j=0;j<upper[i];j++) analysisManager->CreateNtupleDColumn(i+1, branchName[i][j].c_str());
+    for (j=0;j<upper[i];j++) fNtColID[indexID++] = analysisManager->CreateNtupleDColumn(i+1, branchName[i][j].c_str());
     analysisManager->FinishNtuple(i+1);
   }
 

@@ -65,28 +65,29 @@ void SetParameters(int LENS)
     LENSFocalLength=planoLens_BFL;
     printf("======================== planoLens_ET=%.4lf ===================\n",planoLens_ET);
   }
-
-
+  
+  
   foamHolder_halfXYZ[0]=agel_halfXYZ[0]+foamHolderThicknessXYZ[0];
   foamHolder_halfXYZ[1]=foamHolder_halfXYZ[0];
   foamHolder_halfXYZ[2]=foamHolderThicknessXYZ[2]/2.0;
-
+  
   acrylicBox_halfXYZ[0] = max(max(foamHolder_halfXYZ[0],sensor_total_halfx+readoutThickness), LENSHalfXYZ[0])
-    +0.1*cm + box_thicknessXYZ[0];                                                                                                                                               acrylicBox_halfXYZ[1] = acrylicBox_halfXYZ[0];
+    +0.1*cm + box_thicknessXYZ[0];
+  acrylicBox_halfXYZ[1] = acrylicBox_halfXYZ[0];
   acrylicBox_halfXYZ[2] = (BoxDelz+2*foamHolder_halfXYZ[2]+2*agel_halfXYZ[2]
                            +lens_gap+2*LENSHalfXYZ[2]+LENSFocalLength+2*glassWindow_halfXYZ[2]
                            +2*phodet_halfXYZ[2]+(2*readout_halfz+BoxDelz)
                            +box_thicknessXYZ[2]+box_thicknessXYZ[3])/2.0;
-
+  
   hollow_halfXYZ[0]=acrylicBox_halfXYZ[0]-box_thicknessXYZ[0];
   hollow_halfXYZ[1]=hollow_halfXYZ[0];
   hollow_halfXYZ[2]=(2*acrylicBox_halfXYZ[2]-box_thicknessXYZ[2]-box_thicknessXYZ[3])/2.0;
   
   hollow_posXYZ=G4ThreeVector(0.0*cm,0.0*cm,-acrylicBox_halfXYZ[2]+hollow_halfXYZ[2]+box_thicknessXYZ[2]);
-
+  
   foamHolder_posz=-hollow_halfXYZ[2]+BoxDelz+foamHolder_halfXYZ[2];
   agel_posz=foamHolder_posz+foamHolder_halfXYZ[2]+agel_halfXYZ[2];
-
+  
   if (LENS) {
     lens_z=agel_posz+agel_halfXYZ[2]+lens_halfz+lens_gap;  //remove this line
     LENS_z=agel_posz+agel_halfXYZ[2]+lens_halfz+lens_gap;
@@ -96,13 +97,13 @@ void SetParameters(int LENS)
     LENS_z=agel_posz+agel_halfXYZ[2]+lens_gap+planoLens_R;
     glassWindow_z=LENS_z-planoLens_R+planoLens_CT+planoLens_BFL+glassWindow_halfXYZ[2];
   }
-
+  
   phodet_z=glassWindow_z+glassWindow_halfXYZ[2]+phodet_halfXYZ[2];
-
+  
   //Is readout_z match to GEMC simulation?
   readout_z[0]=glassWindow_z-glassWindow_halfXYZ[2];
   readout_z[1]=phodet_z+phodet_halfXYZ[2];
-
+  
   PrintParameters(LENS);
 }
 //----------------------------------------------------//
@@ -132,13 +133,13 @@ void PrintParameters(int LENS)
 void SetExpHallPar(BoxParameters* boxPar)
 {
   int i=0;
-
+  
   sprintf(boxPar->name,"World");
   for (i=0;i<3;i++) boxPar->halfXYZ[i]=expHall_halfXYZ[i];
   boxPar->posXYZ=expHall_posXYZ;
   boxPar->material=Air;
   boxPar->sensitivity=0;
-
+  
   boxPar->color=G4Colour(0.0,0.0,0.0);
   boxPar->visibility=false;                 //keep it false, please.
   boxPar->wireframe=false;
@@ -148,13 +149,13 @@ void SetExpHallPar(BoxParameters* boxPar)
 void SetHolderBoxPar(BoxParameters* boxPar)
 {
   int i=0;
-
+  
   sprintf(boxPar->name,"HolderBox");
   for (i=0;i<3;i++) boxPar->halfXYZ[i]=acrylicBox_halfXYZ[i];
   boxPar->posXYZ=acrylicBox_posXYZ;
   boxPar->material=Aluminum;
   boxPar->sensitivity=0;
-
+  
   boxPar->color=G4Colour(0.51,0.97,0.95);
   boxPar->visibility=true;
   boxPar->wireframe=true;
@@ -164,30 +165,30 @@ void SetHolderBoxPar(BoxParameters* boxPar)
 void SetHollowVolumePar(BoxParameters* boxPar)
 {
   int i;
-
+  
   sprintf(boxPar->name,"HollowVolume");
   for (i=0;i<3;i++) boxPar->halfXYZ[i]=hollow_halfXYZ[i];
   boxPar->posXYZ=hollow_posXYZ;
   boxPar->material=Air_Opt;
   boxPar->sensitivity=0;
-
+  
   boxPar->color=G4Colour(1.0,1.0,1.0);
   boxPar->visibility=true;
   boxPar->wireframe=true;
   boxPar->surface=false;
-
+  
 }
 //----------------------------------------------------//
 void SetFoamHolderPar(BoxParameters* boxPar)
 {
   int i;
-
+  
   sprintf(boxPar->name,"FoamHolder");
   for (i=0;i<3;i++) boxPar->halfXYZ[i]=foamHolder_halfXYZ[i];
   boxPar->posXYZ=G4ThreeVector(0.0*cm,0.0*cm,foamHolder_posz);
   boxPar->material=Air_Opt;
   boxPar->sensitivity=0;
-
+  
   boxPar->color=G4Colour(0.0,1.0,0.0);
   boxPar->visibility=true;
   boxPar->wireframe=true;
@@ -202,20 +203,20 @@ void SetFoamHolderPar(PolyhedraParameters* par)
   par->theta=2*myPI;
   par->numSide=4;
   par->num_zLayer=2;
-
+  
   par->z[0]=agel_posz-agel_halfXYZ[2];   //front of agel
   par->z[1]=agel_posz+agel_halfXYZ[2];   //back of sensor plane
   //G4cout<<"mirror length_="<<par->z[1]-par->z[0]<<endl;
-
+  
   par->rinner[0]=agel_halfXYZ[0];
   par->rinner[1]=agel_halfXYZ[0];
-
+  
   par->router[0]=par->rinner[0]+foamHolderThicknessXYZ[0];
   par->router[1]=par->rinner[1]+foamHolderThicknessXYZ[0];
-
+  
   par->material=Air_Opt;
   par->sensitivity=0;
-
+  
   par->color=G4Colour(0.0,1.0,0.0);
   par->visibility=true;
   par->wireframe=true;
@@ -225,14 +226,14 @@ void SetFoamHolderPar(PolyhedraParameters* par)
 void SetAerogelPar(BoxParameters* boxPar)
 {
   int i;
-
+  
   sprintf(boxPar->name,"Aerogel");
   for (i=0;i<3;i++) boxPar->halfXYZ[i]=agel_halfXYZ[i];
   boxPar->posXYZ=G4ThreeVector(agel_posx,agel_posy,agel_posz);
   boxPar->material=Aerogel2;
   //boxPar->material=Air_Opt;
   boxPar->sensitivity=0;
-
+  
   boxPar->color=G4Colour(1.0,0.65,0.0);
   boxPar->visibility=true;
   boxPar->wireframe=true;
@@ -242,7 +243,7 @@ void SetAerogelPar(BoxParameters* boxPar)
 void SetGlassWindowPar(BoxParameters* boxPar,int  i, G4ThreeVector glassWindow_posXYZ)
 {
   int j;
-
+  
   sprintf(boxPar->name, "glassWindow_%d",i);
   for (j=0;j<3;j++) boxPar->halfXYZ[j]=glassWindow_halfXYZ[j];
   boxPar->posXYZ=glassWindow_posXYZ;  //see mRichDetectorConstruction.cc
