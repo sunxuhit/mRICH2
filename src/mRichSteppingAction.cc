@@ -7,7 +7,11 @@
 //   Updated the output written to ntuple properly. Cleaned up the code.
 //
 // Updated on 4/10/2021: hexc
-//   Fixed a problem of filling ntuple variables. 
+//   Fixed a problem of filling ntuple variables.
+//
+// Updated on 12/1/2021: hexc, Weisen and Austin
+//   Commented out output to screen
+//
 
 #include "globals.hh"
 #include "mRichSteppingAction.hh"
@@ -64,7 +68,7 @@ void mRichSteppingAction::UserSteppingAction(const G4Step* aStep)
     G4String preStepVol = aStep->GetPreStepPoint()->GetPhysicalVolume()->GetName();
     G4String postStepVol = aStep->GetPostStepPoint()->GetPhysicalVolume()->GetName();
     
-    G4cout << "PreStep volume: " << preStepVol << "      PostStep volume: " << postStepVol << G4endl;
+    //    G4cout << "PreStep volume: " << preStepVol << "      PostStep volume: " << postStepVol << G4endl;
         
     //
     // In order to record the hits on sensors, one needs to make sure that "build_readout()"
@@ -89,7 +93,7 @@ void mRichSteppingAction::UserSteppingAction(const G4Step* aStep)
       
       G4ThreeVector g_mom = aStep->GetPostStepPoint()->GetMomentumDirection();
       
-      G4cout << evtID <<"  "<< g_x <<"  "<< g_y <<"  "<< g_z << " charge: "<<pcharge<<" "<<ke<<" "<<wavel<<" "<< g_mom[0] <<" "<< g_mom[1] <<" "<< g_mom[2] << G4endl;
+      //G4cout << evtID <<"  "<< g_x <<"  "<< g_y <<"  "<< g_z << " charge: "<<pcharge<<" "<<ke<<" "<<wavel<<" "<< g_mom[0] <<" "<< g_mom[1] <<" "<< g_mom[2] << G4endl;
       
       //  if (pcharge != 0.0) {iev++;}
       

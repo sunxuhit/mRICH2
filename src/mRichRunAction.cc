@@ -1,5 +1,8 @@
 // 2/2/2017, hexc & Ping
 // Make this appear first!
+// Updated on 12/1/2021: hexc, Weisen and Austin
+//    Updated ntuple merging
+
 #include "G4Timer.hh"
 
 #include "mRichRunAction.hh"
@@ -15,6 +18,21 @@ mRichRunAction::mRichRunAction()
   : G4UserRunAction()
 {
   timer = new G4Timer;
+  // set printing event number per each event
+  G4RunManager::GetRunManager()->SetPrintProgress(1);     
+  
+  // Create analysis manager
+  // The choice of analysis technology is done via selectin of a namespace
+  // in nbAnalysis.hh
+  auto analysisManager = G4AnalysisManager::Instance();
+  G4cout << "Using " << analysisManager->GetType() << G4endl;
+  
+  // Create directories 
+  //analysisManager->SetHistoDirectoryName("histograms");
+  //analysisManager->SetNtupleDirectoryName("ntuple");
+  analysisManager->SetVerboseLevel(1);
+  analysisManager->SetNtupleMerging(true);
+  // Note: merging ntuples is available only with Root output
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -52,14 +70,8 @@ void mRichRunAction::BeginOfRunAction(const G4Run* aRun)
   
   G4cout << "Using " << analysisManager->GetType() << " analysis manager" << G4endl;
   
-  // Create directories 
-  
-  //analysisManager->SetHistoDirectoryName("histograms");
-  //analysisManager->SetNtupleDirectoryName("ntuple");
-  analysisManager->SetVerboseLevel(1);
-  
-  // Open an output file
-  
+
+  // Open an output file  
   G4String fileName = "mRICH_output";
   analysisManager->OpenFile(fileName);
   analysisManager->SetFirstNtupleId(1);
