@@ -3,6 +3,20 @@
 #
 cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 project(mrich2)
+set(CMAKE_INSTALL_PREFIX $ENV{HOME}/WorkSpace/EicC/mRICH2)
+
+# use, i.e. don't skip the full RPATH for the build tree
+set(CMAKE_SKIP_BUILD_RPATH  FALSE)
+
+# when building, don't use the install RPATH already
+# (but later on when installing)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+
+set(CMAKE_INSTALL_RPATH $ENV{HOME}/Software/Geant4/geant4-v10.7-install/lib)
+
+# add the automatically determined parts of the RPATH
+# which point to directories outside the build tree to the install RPATH
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 #----------------------------------------------------------------------------
 # Find Geant4 package, activating all available UI and Vis drivers by default
@@ -57,4 +71,5 @@ endforeach()
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
-install(TARGETS mrich2 DESTINATION bin)
+# install(TARGETS mrich2 DESTINATION bin)
+install(TARGETS mrich2 DESTINATION ./)

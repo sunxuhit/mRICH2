@@ -1,0 +1,10 @@
+# a comment - this is ignored
+# ignore *.swp *.root
+*.swp
+*.root
+
+# ignore everything under build
+build/*
+
+G4History.macro
+mrich2

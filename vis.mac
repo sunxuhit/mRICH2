@@ -17,8 +17,8 @@
 ###/vis/open DAWNFILE
 #
 # Use this open statement instead for OpenGL in immediate mode.
-#/vis/open OGLIX
-/vis/open OGLIQt
+/vis/open OGLIX
+#/vis/open OGLIQt
 #
 # Use this open statement instead to get a HepRep version 1 file
 # suitable for viewing in WIRED.
@@ -38,7 +38,7 @@
 #/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
 /vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
 # (if too many tracks cause core dump => /tracking/storeTrajectory 0)
-/tracking/storeTrajectory 0
+/tracking/storeTrajectory 1
 #
 # To draw gammas only
 #/vis/filtering/trajectories/create/particleFilter
