@@ -31,6 +31,8 @@
 # Output an empty detector
 /vis/viewer/flush
 /vis/viewer/set/viewpointThetaPhi -70 20
+# /vis/viewer/set/background gray
+/vis/viewer/set/background 0.0 0.0 0.0
 #
 # Draw trajectories at end of event, showing trajectory points as
 # markers of size 2 pixels

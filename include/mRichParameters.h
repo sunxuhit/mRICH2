@@ -48,6 +48,7 @@ const G4double LensDiameter    = 2.0*sqrt(2.0)*LensHalfx;
 const G4double centerThickness = 0.06*25.4*mm;
 extern G4double lens_halfz;
 
+// const G4double focalLength     = 3.0*25.4*mm; // 3" focal length
 const G4double focalLength     = 6.0*25.4*mm; // 6" focal length
 const G4double GrooveDensity   = 125.0/(25.4*mm);
 const G4double LensEffDiameter = 152.4*mm; // 6"

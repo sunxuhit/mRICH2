@@ -90,7 +90,8 @@ void UltraFresnelLens::BuildLens(G4VPhysicalVolume *MotherPV){
   //SurfaceVisAtt1->SetForceSolid(true);
 
   for (int igroove=0;igroove<maxGrooves;igroove++) {
-    G4VisAttributes* SurfaceVisAtt2 = new G4VisAttributes(G4Colour(0.0,1.0,1.0));
+    // G4VisAttributes* SurfaceVisAtt2 = new G4VisAttributes(G4Colour(0.0,1.0,1.0));
+    G4VisAttributes* SurfaceVisAtt2 = new G4VisAttributes(G4Colour(0.2745,0.5098,0.7059));
     //SurfaceVisAtt1 = new G4VisAttributes(G4Colour((double)(160.0-igroove)/20.0,(double) 1.0*(1.0-(160.0-igroove)/20.0),1.0));
     //if (abs(igroove-150)<10) {
     SurfaceVisAtt2->SetVisibility(true);

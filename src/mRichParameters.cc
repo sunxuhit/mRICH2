@@ -172,7 +172,8 @@ void SetOptHolderBoxPar(BoxParameters* boxPar)
   boxPar->material=Aluminum;
   boxPar->sensitivity=0;
   
-  boxPar->color=G4Colour(0.51,0.97,0.95);
+  // boxPar->color=G4Colour(0.51,0.97,0.95);
+  boxPar->color=G4Colour(0.7529, 0.7529, 0.7529);
   boxPar->visibility=true;
   boxPar->wireframe=true;
   boxPar->surface=false;
@@ -205,8 +206,10 @@ void SetFoamHolderPar(BoxParameters* boxPar)
   boxPar->material=Air_Opt;
   boxPar->sensitivity=0;
   
-  boxPar->color=G4Colour(0.0,1.0,0.0);
+  // boxPar->color=G4Colour(0.0,1.0,0.0);
+  boxPar->color=G4Colour(0.498,1.0,0.8314);
   boxPar->visibility=true;
+  // boxPar->visibility=false;
   boxPar->wireframe=true;
   boxPar->surface=false;
 }
@@ -233,8 +236,10 @@ void SetFoamHolderPar(PolyhedraParameters* par)
   par->material=Air_Opt;
   par->sensitivity=0;
   
-  par->color=G4Colour(0.0,1.0,0.0);
+  // par->color=G4Colour(0.0,1.0,0.0);
+  par->color=G4Colour(0.498,1.0,0.8314);
   par->visibility=true;
+  // par->visibility=false;
   par->wireframe=true;
   par->surface=false;
 }
@@ -250,7 +255,8 @@ void SetAerogelPar(BoxParameters* boxPar)
   //boxPar->material=Air_Opt;
   boxPar->sensitivity=0;
   
-  boxPar->color=G4Colour(1.0,0.65,0.0);
+  // boxPar->color=G4Colour(1.0,0.65,0.0);
+  boxPar->color=G4Colour(0.9137,0.5882,0.4784);
   boxPar->visibility=true;
   boxPar->wireframe=true;
   boxPar->surface=false;
@@ -299,7 +305,8 @@ void SetRoHolderBoxPar(BoxParameters* boxPar)
   boxPar->material=Aluminum;
   boxPar->sensitivity=0;
   
-  boxPar->color=G4Colour(0.51,0.97,0.95);
+  // boxPar->color=G4Colour(0.51,0.97,0.95);
+  boxPar->color=G4Colour(0.7529, 0.7529, 0.7529);
   boxPar->visibility=true;
   boxPar->wireframe=true;
   boxPar->surface=false;
@@ -332,7 +339,8 @@ void SetGlassWindowPar(BoxParameters* boxPar,int  i, G4ThreeVector glassWindow_p
   boxPar->material=Borosilicate;
   boxPar->sensitivity=0;
 
-  boxPar->color=G4Colour(0.101,0.737,0.612);
+  // boxPar->color=G4Colour(0.101,0.737,0.612);
+  boxPar->color=G4Colour(0.6902,0.7686,0.8706);
   boxPar->visibility=true;
   boxPar->wireframe=true;
   boxPar->surface=false;
@@ -349,11 +357,12 @@ void SetSensorPar(BoxParameters* boxPar, int i, G4ThreeVector phodet_posXYZ)
   boxPar->material=Air_Opt;
   boxPar->sensitivity=0;
   
-  // boxPar->color=G4Colour(0.0,0.0,0.63);
-  boxPar->color=G4Colour(1.0,1.0,0.0);
+  // boxPar->color=G4Colour(1.0,1.0,0.0);
+  boxPar->color=G4Colour(0.9412,0.902,0.549);
   boxPar->visibility=true;
   boxPar->wireframe=true;
-  boxPar->surface=false;
+  // boxPar->surface=false;
+  boxPar->surface=true;
 }
 //----------------------------------------------------//
 void SetAnodePar(BoxParameters* boxPar, int i, G4ThreeVector phoAnode_posXYZ)
@@ -366,7 +375,8 @@ void SetAnodePar(BoxParameters* boxPar, int i, G4ThreeVector phoAnode_posXYZ)
   boxPar->material=Air_Opt;
   boxPar->sensitivity=0;
   
-  boxPar->color=G4Colour(0.0,0.0,0.63);
+  // boxPar->color=G4Colour(0.101,0.737,0.612);
+  boxPar->color=G4Colour(0.3922,0.5843,0.9294);
   boxPar->visibility=true;
   boxPar->wireframe=true;
   boxPar->surface=false;
