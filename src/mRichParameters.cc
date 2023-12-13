@@ -11,11 +11,10 @@ using namespace std;
 #include "mRichMaterial.h"
 #include "UltraFresnelLens.hh"
 
-G4double sensor_total_halfx;
 
-G4double acrylicBox_halfXYZ[3];
-G4ThreeVector hollow_posXYZ;
-G4double hollow_halfXYZ[3];
+G4double optHolderBox_halfXYZ[3];
+G4double optHollowVol_halfXYZ[3];
+G4ThreeVector optHollowVol_posXYZ;
 
 G4double foamHolder_halfXYZ[3];
 G4double foamHolder_posz;
@@ -32,77 +31,94 @@ G4double GrooveWidth;
 
 G4double planoLens_ET;
 
+G4double sensor_total_halfx;
+G4double roHolderBox_halfXYZ[3];
+G4ThreeVector roHolderBox_posXYZ;
+G4double roHollowVol_halfXYZ[3];
+G4ThreeVector roHollowVol_posXYZ;
+
 G4double phodet_x;
 G4double phodet_y;
 
-G4double glassWindow_z;
-G4double phodet_z;
+G4double glsWindow_z;
+G4double phoSensor_z;
+G4double phoAnode_z;
 G4double readout_z[2];
 //----------------------------------------------------//
 void SetParameters(int LENS)
 {
-  sensor_total_halfx=2*glassWindow_halfXYZ[0]+sensorGap;
-  
-  GrooveWidth     = (G4double) 1.0/GrooveDensity ;
-  G4double NumberOfGrooves=floor(GrooveDensity*(LensEffDiameter/2.0));
-  G4double Rmin1 = (NumberOfGrooves-1)*(GrooveWidth) ;
-  G4double Rmax1 = (NumberOfGrooves-0)*(GrooveWidth) ;
-  lens_halfz   = (GetSagita(Rmax1)-GetSagita(Rmin1)+centerThickness)/2.0 ;  //remove this line later
+	//--------------------Optical Holder Box Key Parameters-----------------------------//
+  GrooveWidth              = (G4double) 1.0/GrooveDensity;
+  G4double NumberOfGrooves = floor(GrooveDensity*(LensEffDiameter/2.0));
+  G4double Rmin1           = (NumberOfGrooves-1)*(GrooveWidth);
+  G4double Rmax1           = (NumberOfGrooves-0)*(GrooveWidth);
+  lens_halfz               = (GetSagita(Rmax1)-GetSagita(Rmin1)+centerThickness)/2.0; // remove this line later
 
-  planoLens_ET=planoLens_CT-planoLens_R+sqrt(pow(planoLens_R,2)-pow(planoLens_D/2.0,2));
+  planoLens_ET = planoLens_CT-planoLens_R+sqrt(pow(planoLens_R,2)-pow(planoLens_D/2.0,2));
 
   if (LENS) {  // build Fresnel lens
-    LENSHalfXYZ[0]=LensHalfx;
-    LENSHalfXYZ[1]=LENSHalfXYZ[0];
-    LENSHalfXYZ[2]=(GetSagita(Rmax1)-GetSagita(Rmin1)+centerThickness)/2.0 ;
-    LENSFocalLength=focalLength;
+    LENSHalfXYZ[0]  = LensHalfx;
+    LENSHalfXYZ[1]  = LENSHalfXYZ[0];
+    LENSHalfXYZ[2]  = (GetSagita(Rmax1)-GetSagita(Rmin1)+centerThickness)/2.0 ;
+    LENSFocalLength = focalLength;
     printf("Num. of grooves=%.6lf, groove width=%.6lf\n",NumberOfGrooves,GrooveWidth);
   }
   else {       //build plano lens
-    LENSHalfXYZ[0]=planoLens_D/2.0;
-    LENSHalfXYZ[1]=LENSHalfXYZ[0];
-    LENSHalfXYZ[2]=planoLens_CT/2.0;
-    LENSFocalLength=planoLens_BFL;
+    LENSHalfXYZ[0]  = planoLens_D/2.0;
+    LENSHalfXYZ[1]  = LENSHalfXYZ[0];
+    LENSHalfXYZ[2]  = planoLens_CT/2.0;
+    LENSFocalLength = planoLens_BFL;
     printf("======================== planoLens_ET=%.4lf ===================\n",planoLens_ET);
   }
   
+  foamHolder_halfXYZ[0] = agel_halfXYZ[0]+foamHolderThicknessXYZ[0];
+  foamHolder_halfXYZ[1] = foamHolder_halfXYZ[0];
+  foamHolder_halfXYZ[2] = foamHolderThicknessXYZ[2]/2.0;
   
-  foamHolder_halfXYZ[0]=agel_halfXYZ[0]+foamHolderThicknessXYZ[0];
-  foamHolder_halfXYZ[1]=foamHolder_halfXYZ[0];
-  foamHolder_halfXYZ[2]=foamHolderThicknessXYZ[2]/2.0;
+  optHolderBox_halfXYZ[0] = max(foamHolder_halfXYZ[0], LENSHalfXYZ[0]) +0.1*cm + box_thicknessXYZ[0];
+  optHolderBox_halfXYZ[1] = optHolderBox_halfXYZ[0];
+  optHolderBox_halfXYZ[2] = (box_thicknessXYZ[2]+2*foamHolder_halfXYZ[2]+2*agel_halfXYZ[2]+lens_gap+2*LENSHalfXYZ[2]+LENSFocalLength)/2.0;
   
-  acrylicBox_halfXYZ[0] = max(max(foamHolder_halfXYZ[0],sensor_total_halfx+readoutThickness), LENSHalfXYZ[0])
-    +0.1*cm + box_thicknessXYZ[0];
-  acrylicBox_halfXYZ[1] = acrylicBox_halfXYZ[0];
-  acrylicBox_halfXYZ[2] = (BoxDelz+2*foamHolder_halfXYZ[2]+2*agel_halfXYZ[2]
-                           +lens_gap+2*LENSHalfXYZ[2]+LENSFocalLength+2*glassWindow_halfXYZ[2]
-                           +2*phodet_halfXYZ[2]+(2*readout_halfz+BoxDelz)
-                           +box_thicknessXYZ[2]+box_thicknessXYZ[3])/2.0;
+  optHollowVol_halfXYZ[0] = optHolderBox_halfXYZ[0]-box_thicknessXYZ[0];
+  optHollowVol_halfXYZ[1] = optHollowVol_halfXYZ[0];
+  optHollowVol_halfXYZ[2] = (2*optHolderBox_halfXYZ[2]-box_thicknessXYZ[2])/2.0;
   
-  hollow_halfXYZ[0]=acrylicBox_halfXYZ[0]-box_thicknessXYZ[0];
-  hollow_halfXYZ[1]=hollow_halfXYZ[0];
-  hollow_halfXYZ[2]=(2*acrylicBox_halfXYZ[2]-box_thicknessXYZ[2]-box_thicknessXYZ[3])/2.0;
+  optHollowVol_posXYZ=G4ThreeVector(0.0*cm,0.0*cm,-optHolderBox_halfXYZ[2]+box_thicknessXYZ[2]+optHollowVol_halfXYZ[2]);
   
-  hollow_posXYZ=G4ThreeVector(0.0*cm,0.0*cm,-acrylicBox_halfXYZ[2]+hollow_halfXYZ[2]+box_thicknessXYZ[2]);
-  
-  foamHolder_posz=-hollow_halfXYZ[2]+BoxDelz+foamHolder_halfXYZ[2];
+  // foamHolder_posz=-optHollowVol_halfXYZ[2]+BoxDelz+foamHolder_halfXYZ[2];
+  foamHolder_posz=-optHollowVol_halfXYZ[2]+foamHolder_halfXYZ[2];
   agel_posz=foamHolder_posz+foamHolder_halfXYZ[2]+agel_halfXYZ[2];
   
   if (LENS) {
     lens_z=agel_posz+agel_halfXYZ[2]+lens_halfz+lens_gap;  //remove this line
     LENS_z=agel_posz+agel_halfXYZ[2]+lens_halfz+lens_gap;
-    glassWindow_z=LENS_z-LENSHalfXYZ[2]+LENSFocalLength+glassWindow_halfXYZ[2]; //out of focus. But this makes sense.
+    // glsWindow_z=LENS_z-LENSHalfXYZ[2]+LENSFocalLength+glsWindow_halfXYZ[2]; //out of focus. But this makes sense.
   }
   else {
     LENS_z=agel_posz+agel_halfXYZ[2]+lens_gap+planoLens_R;
-    glassWindow_z=LENS_z-planoLens_R+planoLens_CT+planoLens_BFL+glassWindow_halfXYZ[2];
+    // glsWindow_z=LENS_z-planoLens_R+planoLens_CT+planoLens_BFL+glsWindow_halfXYZ[2];
   }
+
+	//--------------------Readout Holder Box Key Parameters-----------------------------//
+	roHolderBox_halfXYZ[0] = optHolderBox_halfXYZ[0]; // same as optHolderBox_halfXYZ
+	roHolderBox_halfXYZ[1] = optHolderBox_halfXYZ[1]; // same as optHolderBox_halfXYZ
+	roHolderBox_halfXYZ[2] = 20.0*mm; // temp setting
+  roHolderBox_posXYZ = G4ThreeVector(0.0*cm,0.0*cm,optHolderBox_halfXYZ[2]+roHolderBox_halfXYZ[2]);
+
+	roHollowVol_halfXYZ[0] = roHolderBox_halfXYZ[0]-box_thicknessXYZ[0];
+	roHollowVol_halfXYZ[1] = roHolderBox_halfXYZ[1]-box_thicknessXYZ[1];
+	roHollowVol_halfXYZ[2] = (2.0*roHolderBox_halfXYZ[2]-box_thicknessXYZ[2])/2.0;
+  roHollowVol_posXYZ = G4ThreeVector(0.0*cm,0.0*cm,-box_thicknessXYZ[2]/2.0);
+
+  sensor_total_halfx = 2.0*pmt_halfXYZ[0]+pmtGap;
   
-  phodet_z=glassWindow_z+glassWindow_halfXYZ[2]+phodet_halfXYZ[2];
+  glsWindow_z = -roHollowVol_halfXYZ[2]+roAirGap; // w.r.t. Readout Hollow Volume
+  phoSensor_z = glsWindow_z+glsWindow_halfXYZ[2]+phoSensor_halfXYZ[2];
+  phoAnode_z  = phoSensor_z+phoSensor_halfXYZ[2]+phoAnode_halfXYZ[2];
   
   //Is readout_z match to GEMC simulation?
-  readout_z[0]=glassWindow_z-glassWindow_halfXYZ[2];
-  readout_z[1]=phodet_z+phodet_halfXYZ[2];
+  readout_z[0]=glsWindow_z-glsWindow_halfXYZ[2];
+  readout_z[1]=phoSensor_z+phoSensor_halfXYZ[2];
   
   PrintParameters(LENS);
 }
@@ -116,16 +132,16 @@ void PrintParameters(int LENS)
   textfile<<"                   " <<agel_halfXYZ[2]*2<< "mm thick Aerogel\n";                                                                                    
   textfile<<"=====================================================================\n";                                                                      
   textfile<<"Printing detector positions and sizes ...\n\n";                                                                                                
-  textfile<<"hold box       position=(0.0, 0.0, "<<acrylicBox_posXYZ[2]<<")mm half size in XYZ=("<<acrylicBox_halfXYZ[0]<<", "<<acrylicBox_halfXYZ[1]<<", "<<acrylicBox_halfXYZ[2]<<")mm\n";
-  textfile<<"hollowVol      position=(0.0, 0.0, "<<hollow_posXYZ[2]<<")mm half size in XYZ=("<<hollow_halfXYZ[0]<<", "<<hollow_halfXYZ[1]<<", "<<hollow_halfXYZ[2]<<")mm\n";
-  textfile<<"aerogel        position=(0.0, 0.0, "<<hollow_posXYZ[2]+agel_posz<<")mm half size in XYZ=("<<agel_halfXYZ[0]<<", "<<agel_halfXYZ[1]<<", "<<agel_halfXYZ[2]<<")mm\n";          
+  textfile<<"hold box       position=(0.0, 0.0, "<<optHolderBox_posXYZ[2]<<")mm half size in XYZ=("<<optHolderBox_halfXYZ[0]<<", "<<optHolderBox_halfXYZ[1]<<", "<<optHolderBox_halfXYZ[2]<<")mm\n";
+  textfile<<"hollowVol      position=(0.0, 0.0, "<<optHollowVol_posXYZ[2]<<")mm half size in XYZ=("<<optHollowVol_halfXYZ[0]<<", "<<optHollowVol_halfXYZ[1]<<", "<<optHollowVol_halfXYZ[2]<<")mm\n";
+  textfile<<"aerogel        position=(0.0, 0.0, "<<optHollowVol_posXYZ[2]+agel_posz<<")mm half size in XYZ=("<<agel_halfXYZ[0]<<", "<<agel_halfXYZ[1]<<", "<<agel_halfXYZ[2]<<")mm\n";          
   if (LENS) textfile<<"fresnel lens   ";
   else textfile<<"plano lens     ";
-  textfile<<"position=(0.0, 0.0, "<<hollow_posXYZ[2]+LENS_z<<")mm half size in XYZ=("<<LENSHalfXYZ[0]<<", "<<LENSHalfXYZ[1]<<","<<LENSHalfXYZ[2]<<")mm\n";
-  textfile<<"photon sensor  position=(0.0, 0.0, "<<hollow_posXYZ[2]+phodet_z<<")mm half size in XYZ=("<<phodet_halfXYZ[0]<<", "<<phodet_halfXYZ[1]<<", "<<phodet_halfXYZ[2]<<")mm\n";       
-  textfile<<"glass window   pos_z="<<hollow_posXYZ[2]+glassWindow_z<<"mm , half_z= "<<glassWindow_halfXYZ[2]<<"mm\n";                                                             
+  textfile<<"position=(0.0, 0.0, "<<optHollowVol_posXYZ[2]+LENS_z<<")mm half size in XYZ=("<<LENSHalfXYZ[0]<<", "<<LENSHalfXYZ[1]<<","<<LENSHalfXYZ[2]<<")mm\n";
+  textfile<<"photon sensor  position=(0.0, 0.0, "<<optHollowVol_posXYZ[2]+phoSensor_z<<")mm half size in XYZ=("<<phoSensor_halfXYZ[0]<<", "<<phoSensor_halfXYZ[1]<<", "<<phoSensor_halfXYZ[2]<<")mm\n";       
+  textfile<<"glass window   pos_z="<<optHollowVol_posXYZ[2]+glsWindow_z<<"mm , half_z= "<<glsWindow_halfXYZ[2]<<"mm\n";                                                             
   textfile<<"sensor_total_halfx="<<sensor_total_halfx<<"mm\n";                                                                                              
-  textfile<<"readout        position=(0.0, 0.0, "<<hollow_posXYZ[2]+readout_z[0]<<" and "<<hollow_posXYZ[2]+readout_z[1]<<")mm\n";                                                            
+  textfile<<"readout        position=(0.0, 0.0, "<<optHollowVol_posXYZ[2]+readout_z[0]<<" and "<<optHollowVol_posXYZ[2]+readout_z[1]<<")mm\n";                                                            
   textfile<<"=====================================================================\n";                                                                      
   textfile.close();
 }
@@ -146,13 +162,13 @@ void SetExpHallPar(BoxParameters* boxPar)
   boxPar->surface=false;
 }
 //----------------------------------------------------//
-void SetHolderBoxPar(BoxParameters* boxPar)
+void SetOptHolderBoxPar(BoxParameters* boxPar)
 {
   int i=0;
   
-  sprintf(boxPar->name,"HolderBox");
-  for (i=0;i<3;i++) boxPar->halfXYZ[i]=acrylicBox_halfXYZ[i];
-  boxPar->posXYZ=acrylicBox_posXYZ;
+  sprintf(boxPar->name,"OptHolderBox");
+  for (i=0;i<3;i++) boxPar->halfXYZ[i]=optHolderBox_halfXYZ[i];
+  boxPar->posXYZ=optHolderBox_posXYZ;
   boxPar->material=Aluminum;
   boxPar->sensitivity=0;
   
@@ -162,13 +178,13 @@ void SetHolderBoxPar(BoxParameters* boxPar)
   boxPar->surface=false;
 }
 //----------------------------------------------------//
-void SetHollowVolumePar(BoxParameters* boxPar)
+void SetOptHollowVolumePar(BoxParameters* boxPar)
 {
   int i;
   
-  sprintf(boxPar->name,"HollowVolume");
-  for (i=0;i<3;i++) boxPar->halfXYZ[i]=hollow_halfXYZ[i];
-  boxPar->posXYZ=hollow_posXYZ;
+  sprintf(boxPar->name,"OptHollowVolume");
+  for (i=0;i<3;i++) boxPar->halfXYZ[i]=optHollowVol_halfXYZ[i];
+  boxPar->posXYZ=optHollowVol_posXYZ;
   boxPar->material=Air_Opt;
   boxPar->sensitivity=0;
   
@@ -240,12 +256,78 @@ void SetAerogelPar(BoxParameters* boxPar)
   boxPar->surface=false;
 }
 //----------------------------------------------------//
+void SetMirrorPar(PolyhedraParameters* par)
+{
+  sprintf(par->name,"mirror");
+  par->pos=G4ThreeVector(0,0,0);
+  par->start=45.0*myPI/180.0;
+  par->theta=2*myPI;
+  par->numSide=4;
+  par->num_zLayer=2;
+  
+  //par->z[0]=LENS_z+LENSHalfXYZ[2]+lens_gap;   //back of lens+air gap
+  par->z[0] = optHollowVol_halfXYZ[2] - LENSFocalLength + lens_gap;  
+  par->z[1] = optHollowVol_halfXYZ[2] - lens_gap;   //front of sensor plane
+  G4cout<<"mirror length_="<<par->z[1]-par->z[0]<<endl;
+  /*
+  par->z[0]=lens_z+lens_halfz+lens_gap;   //back of lens+air gap
+  par->z[1]=glsWindow_z-glsWindow_halfXYZ[2];   //front of sensor plane
+  G4cout<<"mirror length_="<<par->z[1]-par->z[0]<<endl;
+  */  
+  par->rinner[0]=agel_halfXYZ[0];
+  par->rinner[1]=sensor_total_halfx;
+
+  par->router[0]=par->rinner[0]+mirrorThickness;
+  par->router[1]=par->rinner[1]+mirrorThickness;
+  
+  par->material=Aluminum;
+  par->sensitivity=0;
+
+  par->color=G4Colour(1.0,1.0,0.0);
+  par->visibility=true;
+  par->wireframe=true;
+  par->surface=false;
+}
+//----------------------------------------------------//
+void SetRoHolderBoxPar(BoxParameters* boxPar)
+{
+  int i=0;
+  
+  sprintf(boxPar->name,"RoHolderBox");
+  for (i=0;i<3;i++) boxPar->halfXYZ[i]=roHolderBox_halfXYZ[i];
+  boxPar->posXYZ=roHolderBox_posXYZ;
+  boxPar->material=Aluminum;
+  boxPar->sensitivity=0;
+  
+  boxPar->color=G4Colour(0.51,0.97,0.95);
+  boxPar->visibility=true;
+  boxPar->wireframe=true;
+  boxPar->surface=false;
+}
+//----------------------------------------------------//
+void SetRoHollowVolumePar(BoxParameters* boxPar)
+{
+  int i;
+  
+  sprintf(boxPar->name,"RoHollowVolume");
+  for (i=0;i<3;i++) boxPar->halfXYZ[i]=roHollowVol_halfXYZ[i];
+  boxPar->posXYZ=roHollowVol_posXYZ;
+  boxPar->material=Air_Opt;
+  boxPar->sensitivity=0;
+  
+  boxPar->color=G4Colour(1.0,1.0,1.0);
+  boxPar->visibility=true;
+  boxPar->wireframe=true;
+  boxPar->surface=false;
+  
+}
+//----------------------------------------------------//
 void SetGlassWindowPar(BoxParameters* boxPar,int  i, G4ThreeVector glassWindow_posXYZ)
 {
   int j;
   
   sprintf(boxPar->name, "glassWindow_%d",i);
-  for (j=0;j<3;j++) boxPar->halfXYZ[j]=glassWindow_halfXYZ[j];
+  for (j=0;j<3;j++) boxPar->halfXYZ[j]=glsWindow_halfXYZ[j];
   boxPar->posXYZ=glassWindow_posXYZ;  //see mRichDetectorConstruction.cc
   boxPar->material=Borosilicate;
   boxPar->sensitivity=0;
@@ -262,8 +344,25 @@ void SetSensorPar(BoxParameters* boxPar, int i, G4ThreeVector phodet_posXYZ)
   int j;
 
   sprintf(boxPar->name, "sensor_%d",i);
-  for (j=0;j<3;j++) boxPar->halfXYZ[j]=phodet_halfXYZ[j];
+  for (j=0;j<3;j++) boxPar->halfXYZ[j]=phoSensor_halfXYZ[j];
   boxPar->posXYZ=phodet_posXYZ;      //see mRichDetectorConstruction.cc
+  boxPar->material=Air_Opt;
+  boxPar->sensitivity=0;
+  
+  // boxPar->color=G4Colour(0.0,0.0,0.63);
+  boxPar->color=G4Colour(1.0,1.0,0.0);
+  boxPar->visibility=true;
+  boxPar->wireframe=true;
+  boxPar->surface=false;
+}
+//----------------------------------------------------//
+void SetAnodePar(BoxParameters* boxPar, int i, G4ThreeVector phoAnode_posXYZ)
+{
+  int j;
+
+  sprintf(boxPar->name, "anode_%d",i);
+  for (j=0;j<3;j++) boxPar->halfXYZ[j]=phoAnode_halfXYZ[j];
+  boxPar->posXYZ=phoAnode_posXYZ;      //see mRichDetectorConstruction.cc
   boxPar->material=Air_Opt;
   boxPar->sensitivity=0;
   
@@ -271,39 +370,6 @@ void SetSensorPar(BoxParameters* boxPar, int i, G4ThreeVector phodet_posXYZ)
   boxPar->visibility=true;
   boxPar->wireframe=true;
   boxPar->surface=false;
-}
-//----------------------------------------------------//
-void SetMirrorPar(PolyhedraParameters* par)
-{
-  sprintf(par->name,"mirror");
-  par->pos=G4ThreeVector(0,0,0);
-  par->start=45.0*myPI/180.0;
-  par->theta=2*myPI;
-  par->numSide=4;
-  par->num_zLayer=2;
-  
-  //par->z[0]=LENS_z+LENSHalfXYZ[2]+lens_gap;   //back of lens+air gap
-  par->z[0]=glassWindow_z-glassWindow_halfXYZ[2]-LENSFocalLength + lens_gap;  
-  par->z[1]=glassWindow_z-glassWindow_halfXYZ[2];   //front of sensor plane
-  G4cout<<"mirror length_="<<par->z[1]-par->z[0]<<endl;                                                                                                                                                                                
-  /*
-  par->z[0]=lens_z+lens_halfz+lens_gap;   //back of lens+air gap
-  par->z[1]=glassWindow_z-glassWindow_halfXYZ[2];   //front of sensor plane
-  G4cout<<"mirror length_="<<par->z[1]-par->z[0]<<endl;
-  */  
-  par->rinner[0]=agel_halfXYZ[0];
-  par->rinner[1]=sensor_total_halfx;
-
-  par->router[0]=par->rinner[0]+mirrorThickness;
-  par->router[1]=par->rinner[1]+mirrorThickness;
-  
-  par->material=Aluminum;
-  par->sensitivity=0;
-
-  par->color=G4Colour(1.0,1.0,0.0);
-  par->visibility=true;
-  par->wireframe=true;
-  par->surface=false;
 }
 //----------------------------------------------------//
 void SetReadoutPar(PolyhedraParameters* par)

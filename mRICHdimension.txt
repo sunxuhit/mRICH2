@@ -1,14 +1,14 @@
 =====================================================================
-                   33mm thick Aerogel
+                   30mm thick Aerogel
 =====================================================================
 Printing detector positions and sizes ...
 
-hold box       position=(0.0, 0.0, 0)mm half size in XYZ=(74.025, 74.025, 111.622)mm
-hollowVol      position=(0.0, 0.0, -2.38125)mm half size in XYZ=(67.675, 67.675, 107.653)mm
-aerogel        position=(0.0, 0.0, -81.5343)mm half size in XYZ=(55.25, 55.25, 16.5)mm
-fresnel lens   position=(0.0, 0.0, -60.9938)mm half size in XYZ=(66.675, 66.675,0.865535)mm
-photon sensor  position=(0.0, 0.0, 92.7907)mm half size in XYZ=(24, 24, 0.75)mm
-glass window   pos_z=91.2907mm , half_z= 0.75mm
-sensor_total_halfx=52.5mm
-readout        position=(0.0, 0.0, 90.5407 and 93.5407)mm
+hold box       position=(0.0, 0.0, 0)mm half size in XYZ=(72.6, 72.6, 99.4468)mm
+hollowVol      position=(0.0, 0.0, 0.79375)mm half size in XYZ=(66.25, 66.25, 98.653)mm
+aerogel        position=(0.0, 0.0, -72.8593)mm half size in XYZ=(55.25, 55.25, 15)mm
+fresnel lens   position=(0.0, 0.0, -53.8187)mm half size in XYZ=(63.5, 63.5,0.865535)mm
+photon sensor  position=(0.0, 0.0, -13.9125)mm half size in XYZ=(24.25, 24.25, 0.75)mm
+glass window   pos_z=-15.4125mm , half_z= 0.75mm
+sensor_total_halfx=54.5mm
+readout        position=(0.0, 0.0, -16.1625 and -13.1625)mm
 =====================================================================

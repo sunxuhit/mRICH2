@@ -53,19 +53,22 @@ public:
 public:
   G4VPhysicalVolume* Construct();
   void build_expHall();
-  void build_holderBox();
+  void build_optHolderBox();
   void build_foamHolder();
   void build_aerogel();
+  void build_mirror();
+  void build_roHolderBox();
   void build_SensorPlane();
   void build_readout();
-  void build_mirror();
   void build_planoLens();
 
 private:
   BOX* expHall;
-  BOX* holderBox;          //holderBox is unneccessery to be predefine here
-  BOX* hollowVolume;
+  BOX* optHolderBox;          //holderBox is unneccessery to be predefine here
+  BOX* optHollowVolume;
   BOX* aerogel;
+  BOX* roHolderBox;          //holderBox is unneccessery to be predefine here
+  BOX* roHollowVolume;
 };
 
 
